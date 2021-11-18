@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
         30, 31, 32, 33, 34, 35, 36, 37, 38, 39
     ];
-
+    
     //show invaders on board 
     spaceInvaders.forEach(element => {
         grid[element].classList.add('invader');
@@ -24,8 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //move invaders every second
     function moveInvaders() {
-        const leftCoordinate = spaceInvaders[0] % width == 0; //left boarder
-        console.log(leftCoordinate)
+        const leftCoordinate = spaceInvaders[0] % width == 0; //left border
         const rightCoordinate = spaceInvaders[spaceInvaders.length - 1] % width == (width - 1); //right border 
         //change movement direction of invaders
         if ((leftCoordinate && direction == -1) || (rightCoordinate && direction == 1)) {
@@ -45,6 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
         spaceInvaders.forEach(element => {
             grid[element].classList.add('invader');
         });
+        //stop moving invaders after reaching bottom of board
+        if (spaceInvaders.find(e => e > 209)){
+            clearInterval(movement);
+            span.textContent = score +"|30  GAME OVER!"
+            span.style.color = 'red';
+        }
     }
 
     //ship move
@@ -67,17 +72,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //ship shot
     function shipShot(event){
-        document.removeEventListener('keydown', shipShot);
-        setTimeout(() => document.addEventListener('keydown', shipShot), 100);
-        
         let shotActualPosition = shipActualPosition;
-        function shot (eve){
+
+        function shot (){
             grid[shotActualPosition].classList.remove('shot');
             shotActualPosition -= width;
             grid[shotActualPosition].classList.add('shot');
 
             if (shotActualPosition < 15) {
-                
                 setTimeout(() => grid[shotActualPosition].classList.remove('shot'), 100);
                 clearInterval(shotInterval);
             } else if (spaceInvaders.includes(shotActualPosition)){
@@ -85,12 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 grid[shotActualPosition].classList.remove('invader');
                 destroyedSpaceInvaders.push(shotActualPosition);
                 spaceInvaders = spaceInvaders.filter(element => element != shotActualPosition);
-                spaceInvaders.
                 score++;
                 span.textContent = score + "|30";
                 clearInterval(shotInterval);
-                if (destroyedSpaceInvaders.length == spaceInvaders.length){
+                if (destroyedSpaceInvaders.length == 30){
                     span.textContent = "YOU WON!"
+                    span.style.color = 'green';
                     clearInterval(movement);
                 }
             }
@@ -100,11 +102,10 @@ document.addEventListener('DOMContentLoaded', () => {
             //update position of shot 
             var shotInterval = setInterval(shot, 100); 
         }
-
     }
 
     document.addEventListener('keydown', shipMove);
-    document.addEventListener('keydown', shipShot);
-    let movement = setInterval(moveInvaders, 1000);
+    document.addEventListener('keyup', shipShot);
+    let movement = setInterval(moveInvaders, 500);
 
 });

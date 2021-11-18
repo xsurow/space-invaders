@@ -21,22 +21,21 @@ body {
     
 }
 
-.grid__square {
-    /* border: 1px solid whitesmoke; */
-}
-
 .invader {
     background: red;
     border-radius: 50%;
     width: 80%;
     height: 80%;
     margin: auto;
+    z-index: 0;
 }
 
 .ship {
     background-color: blue;
+    border-radius: 0;
 }
 
 .shot {
     background-color: orange;
 }
+
