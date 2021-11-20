@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
         15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
         30, 31, 32, 33, 34, 35, 36, 37, 38, 39
     ];
+    let leftExtreme;
+    let rightExtreme;
     
     //show invaders on board 
     spaceInvaders.forEach(element => {
@@ -22,10 +24,31 @@ document.addEventListener('DOMContentLoaded', () => {
     //show ship on board
     grid[shipActualPosition].classList.add('ship');
 
+    //find extreme values of array
+    function findExtreme(){
+        for (let i = 0; i < width; i++){
+            for (let j = 0; j < width*width; j += width){
+                if (grid[i + width * j].classList.contains('invader')){
+                    leftExtreme = spaceInvaders.findIndex(e => e == grid[i + width* j]);
+                    break;
+                }   
+            }
+        }
+        for (let i = width - 1; i >= 0; i--){
+            for (let j = 0; j < width*width; j += width){
+                if (grid[i + width * j].classList.contains('invader')){
+                    rightExtreme = spaceInvaders.findINdex(e => e == grid[i + width * j]);
+                    break;
+                }   
+            }
+        }
+    };
+    findExtreme();
+
     //move invaders every second
     function moveInvaders() {
-        const leftCoordinate = spaceInvaders[0] % width == 0; //left border
-        const rightCoordinate = spaceInvaders[spaceInvaders.length - 1] % width == (width - 1); //right border 
+        const leftCoordinate = spaceInvaders[leftExtreme] % width == 0; //left border
+        const rightCoordinate = spaceInvaders[rightExtreme] % width == (width - 1); //right border 
         //change movement direction of invaders
         if ((leftCoordinate && direction == -1) || (rightCoordinate && direction == 1)) {
             direction = width;
@@ -48,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (spaceInvaders.find(e => e > 209)){
             clearInterval(movement);
             span.textContent = score +"|30  GAME OVER!"
+            grid[shipActualPosition].classList.remove('ship');
             span.style.color = 'red';
         }
     }
@@ -85,10 +109,11 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (spaceInvaders.includes(shotActualPosition)){
                 grid[shotActualPosition].classList.remove('shot');
                 grid[shotActualPosition].classList.remove('invader');
-                destroyedSpaceInvaders.push(shotActualPosition);
+                findExtreme();
                 spaceInvaders = spaceInvaders.filter(element => element != shotActualPosition);
                 score++;
                 span.textContent = score + "|30";
+                destroyedSpaceInvaders.push(shotActualPosition);
                 clearInterval(shotInterval);
                 if (destroyedSpaceInvaders.length == 30){
                     span.textContent = "YOU WON!"
