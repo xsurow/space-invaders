@@ -13,8 +13,8 @@ body {
 }
 
 .grid {
-    width: 90vmin;
-    height: 90vmin;
+    width: 85vmin;
+    height: 85vmin;
     background-color: white;
     display: grid;
     grid-template-columns: repeat(25, 1fr);
