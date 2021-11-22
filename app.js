@@ -5,24 +5,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let direction = 1;
     let score = 0;
-    let width = 15;
-    let shipActualPosition = 217;
+    let width = 25;
+    let shipActualPosition = 614;
     let destroyedSpaceInvaders = [];
     let leftExtreme = null;
     let rightExtreme = null;
     let level = 0;
+    let speed = 400;
     let movement;
     let spaceInvaders = [
-        [0, 1, 2, 3, 4, 5, 6, 7, 8,
-            15, 16, 17, 18, 19, 20, 21, 22, 23,
-            30, 31, 32, 33, 34, 35, 36, 37, 38],
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-            15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-            30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-            15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-            30, 31, 32, 33, 34, 35, 36, 37, 38, 39]
+        [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+         31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
+         56, 57, 58, 59, 60, 61, 62, 63, 63, 64, 65, 66, 67, 68],
+
+        [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+        30, 31, 32, 33,       36, 37, 38,       41, 42, 43, 44,
+        55, 56, 57,               62,               67, 68, 69,
+        80, 81,               86, 87, 88,               93, 94,
+        105,                     112,                      119],
+
+        [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+        29, 30, 31, 32, 33,       36, 37, 38,       41, 42, 43, 44, 45,
+        54, 55, 56, 57,               62,               67, 68, 69, 70,
+        79, 80, 81,           85 ,86, 87, 88, 89,              93, 94, 95,
+        104, 105,            110,    112,     114,               119, 120,
+        129,                 135,             139,                     145,
+                             160,             164,  
+             180, 181, 182,                            192, 193, 194,  
+                  206,                                      218]
     ];
+    let lengthOfInvadersArray;
+    let spamShot;
 
     //show ship on board
     grid[shipActualPosition].classList.add('ship');
@@ -81,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
             grid[element].classList.add('invader');
         });
         //stop moving invaders after reaching bottom of board
-        if (spaceInvaders[level].find(e => e > 209)) {
+        if (spaceInvaders[level].find(e => e > 600)) {
             clearInterval(movement);
             span.textContent = score + "|30  GAME OVER!"
             grid[shipActualPosition].classList.remove('ship');
@@ -110,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //ship shot
     function shipShot(event) {
         let shotActualPosition = shipActualPosition;
-
+        
         function shot() {
             grid[shotActualPosition].classList.remove('shot');
             shotActualPosition -= width;
@@ -128,31 +141,54 @@ document.addEventListener('DOMContentLoaded', () => {
                 span.textContent = score + "|27";
                 destroyedSpaceInvaders.push(shotActualPosition);
                 clearInterval(shotInterval);
-                if (destroyedSpaceInvaders.length == spaceInvaders[level].length) {
+
+                if (destroyedSpaceInvaders.length == lengthOfInvadersArray) {
                     if (level == 3) {
                         span.textContent = "YOU WON!"
                         span.style.color = 'green';
-                        clearInterval(movement);
+                        clearGame();
                     }
                     level++;
-                    showInvaders();
-                    clearInterval(movement);
+                    clearGame();
                 }
             }
         }
         //invoke shot function by clicking spacebar
         if (event.key == ' ') {
+            document.removeEventListener('keydown', shipShot);
             //update position of shot 
-            var shotInterval = setInterval(shot, 80);
+            var shotInterval = setInterval(shot, 50);
         }
     }
 
-    function startGame(){
+    //clear whole game each level
+    function clearGame() {
+        destroyedSpaceInvaders = [];
+        clearInterval(movement);
+        clearInterval(spamShot);
+        grid.forEach(element => element.classList.remove('invader'));
+        direction = 1;
+        speed += 100;
+        document.removeEventListener('keydown', shipShot);
+        startGame();
+    }
+
+    document.addEventListener('keydown', shipMove);
+
+    //function starts the game every level
+    function startGame() {
+        lengthOfInvadersArray = spaceInvaders[length].length;
         showInvaders();
-        findExtreme();
-        document.addEventListener('keydown', shipMove);
-        document.addEventListener('keyup', shipShot);
-        movement = setInterval(moveInvaders, 300);
+        setTimeout(() => {
+            findExtreme();
+            movement = setInterval(moveInvaders, speed);
+        }, 3000);
+
+        //recursive setTimeout to prevent from spamming spacebar
+        spamShot = setTimeout(function preventSpamming() {
+            document.addEventListener('keydown', shipShot);
+            setTimeout(preventSpamming, 600);
+        }, 3000);
     }
 
     startGame();
