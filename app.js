@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     const grid = document.querySelectorAll('.grid__square');
-    const span = document.querySelector('span');
+    const span = document.querySelector('.panel__span');
+    const h2 = document.querySelector('.panel__h2');
 
     let direction = 1;
     let score = 0;
@@ -10,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let destroyedSpaceInvaders = [];
     let leftExtreme = null;
     let rightExtreme = null;
-    let level = 0;
+    let level = 2;
     let speed = 400;
     let movement;
     let lengthOfInvadersArray;
@@ -163,8 +164,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (destroyedSpaceInvaders.length == lengthOfInvadersArray) {
                     //condition to win a game
                     if (level == 2) {
-                        span.textContent = "YOU WON!"
-                        span.style.color = 'green';
+                        span.textContent = '';
+                        h2.textContent = 'YOU WON!'
+                        h2.style.color = 'green';
                         cleanGame();
                     } else {
                         cleanGame();

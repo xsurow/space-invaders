@@ -1,15 +1,23 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="style.css" rel="stylesheet">
     <script src="app.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Space invaders</title>
 </head>
+
 <body>
-    <h2>Score: <span></span></h2>
-    <div class="grid"> 
+    <div class="panel">
+        <h1 class="panel__h1">SPACE INVADERS</h1>
+        <h2 class="panel__h2">SCORE <span class="panel__span">0</span></h2>
+    </div>
+    
+    <div class="grid">
         <!--15x15 225 squares-->
         <div class="grid__square"></div>
         <div class="grid__square"></div>
@@ -637,6 +645,6 @@
         <div class="grid__square"></div>
         <div class="grid__square"></div>
     </div>
-    
 </body>
+
 </html>

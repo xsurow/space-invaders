@@ -1,28 +1,97 @@
 *, :after, :before{
     box-sizing: border-box;
+    border: 0;
+    margin: 0;
+}
+
+html {
+    font-size: 16px;
+    font-family: sans-serif;
 }
 
 body {
-    font-size: 16px;
-    color: white;
+    background-image: linear-gradient(45deg, rgba(0, 23, 156, 0.952), rgba(0, 0, 0, 0) 100%),
+                      linear-gradient(240deg, rgb(0, 32, 212), rgb(0, 255, 0, 0) 100%),
+                      linear-gradient(350deg, rgb(34, 0, 129), rgb(0, 0, 255, 0) 100%);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color:midnightblue
+    column-gap: 8vw;
+    padding: 2vh;
+    overflow: hidden;
 }
 
 .grid {
-    width: 85vmin;
-    height: 85vmin;
-    background-color: white;
+    width: 82vmin;
+    height: 82vmin;
+    background-color: rgba(184, 184, 184, 0.1);
+    border: 1px solid rgba(231, 195, 252, 0.3);
     display: grid;
     grid-template-columns: repeat(25, 1fr);
-    
+}
+
+.panel {
+    width: 30%;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.1);
+    margin: 0 0 0.5rem 0;
+    border-radius: 10px;
+}
+
+.panel__h1 {
+    font-size: calc(1rem + 4vmin);
+    color: rgba(255, 255, 255, 1);
+    text-shadow:
+        0 0 5px rgb(68, 243, 255),
+        0 0 20px rgb(68, 243, 255),
+        0 0 40px rgb(68, 243, 255),
+        0 0 100px rgb(68, 243, 255),
+        0 0 250px rgb(68, 243, 255),
+        0 0 500px rgb(68, 243, 255);
+    animation: heading1 5s infinite;
+}
+
+@keyframes heading1 {
+    0% {
+        opacity: 1;
+    }
+    2% {
+        opacity: 0.7;
+    }
+    3% {
+        opacity: 1;
+    }
+    5% {
+        opacity: 0.3;
+    }
+    6% {
+        opacity: 1;
+    }
+}
+
+.panel__h2 {
+    color: rgb(255, 255, 255);
+    font-size: calc(0.5rem + 2vmin);
+    padding: 1vh;
+    text-shadow:
+    0 0 5px rgb(111, 210, 255),
+    0 0 20px rgb(111, 210, 255),
+    0 0 40px rgb(111, 210, 255),
+    0 0 100px rgb(111, 210, 255),
+    0 0 250px rgb(111, 210, 255),
+    0 0 500px rgb(111, 210, 255);
+    animation: heading2 0.1s infinite;
+}
+
+@keyframes heading2 {
+    50%{
+        opacity: 0.95;
+    }
 }
 
 .invader {
-    background: red;
+    background: black;
     border-radius: 50%;
     width: 80%;
     height: 80%;
@@ -37,6 +106,4 @@ body {
 
 .shot {
     background-color: orange;
-    
 }
-
