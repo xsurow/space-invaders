@@ -3,18 +3,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const span = document.querySelector('.panel__span');
     const h2 = document.querySelector('.panel__h2');
     const meteorSpace = document.querySelector('.space');
+    const btnShip = document.querySelector('.btns__ship');
+    const btnInvader = document.querySelector('.btns__invader');
 
     var shotSound = new Audio('./sounds/shot.mp3');
     var killInvader = new Audio('./sounds/invader.mp3');
+    var optionSound = new Audio('./change.mp3')
 
     let direction = 1;
     let score = 0;
     let width = 25;
-    let shipActualPosition = 614;
+    let shipActualPosition = 612;
     let destroyedSpaceInvaders = [];
     let leftExtreme = null;
     let rightExtreme = null;
-    let level = 0;
+    let level = 2;
     let speedOfInvaders = 500;
     let speedOfShot = 800;
     let movement;
@@ -42,6 +45,74 @@ document.addEventListener('DOMContentLoaded', () => {
             180, 181, 182, 192, 193, 194,
             206, 218]
     ];
+
+    let shipSound = true;
+    let invaderSound = true;
+
+    function toggleShip(e) {
+        if (btnShip.classList.contains('green')){
+            this.classList.remove('green');
+            this.classList.add('red');
+            optionSound.play();
+            shipSound = false;
+        } else {
+            this.classList.remove('red');
+            this.classList.add('green');
+            optionSound.play();
+            shipSound = true;
+        }
+        e.target.blur();
+    }
+
+    function toggleInvader(e) {
+        if (btnInvader.classList.contains('green')){
+            this.classList.remove('green');
+            this.classList.add('red');
+            optionSound.play();
+            invaderSound = false;
+        } else {
+            this.classList.remove('red');
+            this.classList.add('green');
+            optionSound.play();
+            invaderSound = true;
+        }
+        e.target.blur();
+    }
+
+    btnShip.addEventListener('click', toggleShip);
+    btnInvader.addEventListener('click', toggleInvader);
+
+    //---------------------ANIMATION OF METEORS------------------------
+    let randomTime = 5;
+    let randomPosition = 50;
+    let meteorsInterval;
+    let endMeteors = false;
+
+    //function generate random position and duration time of meteor
+    function generateRandom() {
+        randomTime = Math.floor(Math.random() * 7) + 5;
+        randomPosition = Math.floor(Math.random() * 98) + 1;
+    }
+
+    function startMeteors() {
+        function newMeteor() {
+            generateRandom()
+            const newElement = document.createElement('div');
+            newElement.classList.add('meteor');
+            newElement.style.left = randomPosition + "%";
+            newElement.style.animationDuration = randomTime + "s";
+            newElement.style.opacity = 0.6;
+            meteorSpace.appendChild(newElement);
+            setTimeout(() => { meteorSpace.removeChild(meteorSpace.childNodes[0]) }, 13000);
+            if (endMeteors) {
+                clearInterval(meteorsInterval);
+            }
+        }
+        meteorsInterval = setInterval(newMeteor, 400);
+    }
+
+    //startMeteors();
+    //-------------------------------------------------------------------
 
     //variables of requestAnimationFrame
     let startMoveInvaders = undefined;
@@ -157,15 +228,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function shipShot(event) {
         document.removeEventListener('keydown', shipShot); //remove shotting to prevent from spamming
         let shotActualPosition = shipActualPosition; //remember actual position of ship
-        
+
         //function that animate the shot 
         function shot() {
             //move bullet one square
-            
+
             grid[shotActualPosition].classList.remove('shot');
             shotActualPosition -= width;
             grid[shotActualPosition].classList.add('shot');
-            
 
             //if bullet is apart form board or invaders got shot 
             if (shotActualPosition < width && !grid[shotActualPosition].classList.contains('invader')) {
@@ -175,7 +245,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 grid[shotActualPosition].classList.remove('shot'); //remove shot from board
                 grid[shotActualPosition].classList.remove('invader'); //remove invader from board
                 spaceInvaders[level] = spaceInvaders[level].filter(element => element != shotActualPosition); //update array
-                killInvader.play();
                 findExtreme(); //find left and right extreme position of invaders
                 score++;
                 span.textContent = score + "|" + lengthOfInvadersArray;
@@ -188,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (level == 2) {
                         span.textContent = '';
                         h2.textContent = 'YOU WON!'
-                        h2.style.color = 'green';
+                        h2.style.color = 'rgb(29, 255, 29)';
                         cleanGame();
                     } else {
                         cleanGame();
@@ -198,10 +267,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // invoke shot function by clicking spacebar
         if (keys['Space']) {
-            shotSound.play();
+            // if(shipSound) {
+            //     shotSound.play();
+            // }
             var shotInterval = setInterval(shot, 50); //animation of shot
         } else if (event.key == ' ') {
-            shotSound.play();
+            // if(shipSound) {
+            //     shotSound.play();
+            // }
             var shotInterval = setInterval(shot, 50); //animation of shot
         }
     }
@@ -225,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //move ship horizontally
     document.addEventListener('keydown', shipMove);
-    
+
     //function starts the game every level
     function startGame() {
         lengthOfInvadersArray = spaceInvaders[level].length;
@@ -242,10 +315,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (keys['Space']) {
                 shipShot();
             }
-            spamShot = setTimeout(preventSpamming, 600);
+            spamShot = setTimeout(preventSpamming, 500);
         }, 3000);
     }
 
     //function starts whole game
-    startGame();
+    //startGame();
 });
