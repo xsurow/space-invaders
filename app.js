@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    //board elements
     const grid = document.querySelectorAll('.grid__square');
     const span = document.querySelector('.panel__span');
     const h2 = document.querySelector('.panel__h2');
@@ -6,9 +8,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnShip = document.querySelector('.btns__ship');
     const btnInvader = document.querySelector('.btns__invader');
 
-    var shotSound = new Audio('./sounds/shot.mp3');
-    var killInvader = new Audio('./sounds/invader.mp3');
-    var optionSound = new Audio('./change.mp3')
+    //CSS menu elements
+    const defaultLevel = document.querySelector('.menu__default');
+    const chooseLevel = document.querySelector('.menu__title');
+    const levelBox = document.querySelector('.menu__levels');
+    const levels = document.querySelectorAll('.lvl');
+    const firstLevel = document.querySelector('.menu__choose1');
+    const secondLevel = document.querySelector('.menu__choose2');
+    const thirdLevel = document.querySelector('.menu__choose3');
+    const startButton = document.querySelector('.menu__start');
+    const showMenu = document.querySelector('.menu');
+    
+    //sounds
+    let shipSound = new Audio('./sounds/shot.mp3');
+    let invaderSound = new Audio('./sounds/invader.mp3');
+    let changeSound = new Audio('./sounds/change.mp3');
+    let startSound = new Audio('./sounds/start-game.wav');
+    let shipSoundPlays = true;
+    let invaderSoundPlays = true;
 
     let direction = 1;
     let score = 0;
@@ -46,34 +63,100 @@ document.addEventListener('DOMContentLoaded', () => {
             206, 218]
     ];
 
-    let shipSound = true;
-    let invaderSound = true;
+    //---------------------------MAIN MENU-------------------------------
+    let defaultOption = true;
+    let levelOption = false;
+    let choosenLevel = 1;
+    let colorArray = ['inset 0 0 5px rgb(0, 255, 0)', 'inset 0 0 5px rgb(217, 255, 0)', 'inset 0 0 5px rgb(255, 0, 0)'];
+    let shadowArray = ['inset 0 0 5px rgb(0, 255, 0), inset 0 0 20px rgb(0, 255, 0)',
+                      'inset 0 0 5px rgb(217, 255, 0), inset 0 0 20px rgb(217, 255, 0)',
+                      'inset 0 0 5px rgb(255, 0, 0), inset 0 0 20px rgb(255, 0, 0)'];
+
+    //function style default button
+    function toggleDefault () {
+        if (!defaultOption && levelOption) {
+           changeSound.play();
+           defaultLevel.style.color = 'rgb(29, 255, 29)';
+           defaultLevel.style.boxShadow = 'inset 0 0 5px rgb(29, 255, 29), inset 0 0 10px rgb(29, 255, 29)';
+           defaultLevel.style.border = '2px solid rgb(29, 255, 29)';
+           chooseLevel.style.color = 'white';
+           chooseLevel.style.boxShadow = 'inset 0 0 5px white, inset 0 0 10px white';
+           chooseLevel.style.border = '2px solid white';
+           levelBox.style.visibility = 'hidden';
+           levelBox.style.opacity = '0';
+           defaultOption = true;
+           levelOption = false;
+           level = 0;
+       }
+   }
+
+    //function style level button
+    function toggleLevel () {
+        if (!levelOption && defaultOption) {
+            changeSound.play();
+            chooseLevel.style.color = 'rgb(29, 255, 29)';
+            chooseLevel.style.boxShadow = 'inset 0 0 5px rgb(29, 255, 29), inset 0 0 10px rgb(29, 255, 29)';
+            chooseLevel.style.border = '2px solid rgb(29, 255, 29)';
+            defaultLevel.style.color = 'white';
+            defaultLevel.style.boxShadow = 'inset 0 0 5px white, inset 0 0 10px white';
+            defaultLevel.style.border = '2px solid white';
+            levelBox.style.visibility = 'visible';
+            levelBox.style.opacity = '1';
+            defaultOption = false;
+            levelOption = true;
+        }
+    }
+
+    defaultLevel.addEventListener('click', toggleDefault);
+    chooseLevel.addEventListener('click', toggleLevel);
+
+    //funtion change level, clean other selected buttons
+    function chooseLevelFunction () {
+        changeSound.play();
+        level = this.innerHTML - 1;
+        for (let i = 0; i < 3; i++) {
+            if (level != i) {
+                levels[i].style.boxShadow = colorArray[i]
+            }
+        }
+        this.style.boxShadow = shadowArray[level];
+    }
+
+    //listeners on each level button
+    firstLevel.addEventListener('click', chooseLevelFunction);
+    secondLevel.addEventListener('click', chooseLevelFunction);
+    thirdLevel.addEventListener('click', chooseLevelFunction);
+
+    //listener on start the game
+    startButton.addEventListener('click', () => {
+        startSound.play();
+    });
+
+    //---------------------SOUND SHOT/INVADER------------------------
 
     function toggleShip(e) {
+        changeSound.play();
         if (btnShip.classList.contains('green')){
             this.classList.remove('green');
             this.classList.add('red');
-            optionSound.play();
             shipSound = false;
         } else {
             this.classList.remove('red');
             this.classList.add('green');
-            optionSound.play();
             shipSound = true;
         }
         e.target.blur();
     }
 
     function toggleInvader(e) {
+        changeSound.play();
         if (btnInvader.classList.contains('green')){
             this.classList.remove('green');
             this.classList.add('red');
-            optionSound.play();
             invaderSound = false;
         } else {
             this.classList.remove('red');
             this.classList.add('green');
-            optionSound.play();
             invaderSound = true;
         }
         e.target.blur();
