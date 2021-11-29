@@ -80,6 +80,39 @@ body {
     0 0 250px rgb(111, 210, 255);
 }
 
+.reset {
+    position: absolute;
+    top: 0;
+    margin: 1rem 0 0 1rem;
+    font-size: 1.3rem;
+    padding: 0.5rem;
+    border: none;
+    box-shadow: inset 0 0 10px rgb(70, 70, 255);
+}
+
+.reset:hover {
+    box-shadow: inset 0 0 2px white;
+    cursor: pointer;
+    text-shadow: 0 0 25px rgba(255, 255, 255),
+                 0 0 50px rgba(255, 255, 255);
+}
+
+.countdown {
+    color: white;
+    text-shadow: 1px 1px 4px white;
+    font-size: 6rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    transition: scale 0.3s linear;
+}
+
+.countdown__value {
+    transform: scale(0.2);
+}
+
 .invader {
     background: black;
     border-radius: 50%;
@@ -170,8 +203,8 @@ body {
 .green {
     color:rgb(29, 255, 29);
     text-shadow: 
-        0 0 10px rgb(29, 255, 29),
-        0 0 20px rgb(29, 255, 29);
+        0 0 10px rgb(29, 255, 29, 0.8),
+        0 0 20px rgb(29, 255, 29, 0.8);
 }
 
 .red {
@@ -186,6 +219,7 @@ body {
     text-shadow: 
         0 0 25px rgba(255, 255, 255),
         0 0 50px rgba(255, 255, 255);
+    cursor: pointer;
 }
 
 .menu {
@@ -332,3 +366,4 @@ body {
         inset 0 0 10px rgba(4, 224, 253, 0.7),
         inset 0 0 20px rgba(4, 224, 253, 1);
 }
+

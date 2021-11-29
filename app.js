@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const secondLevel = document.querySelector('.menu__choose2');
     const thirdLevel = document.querySelector('.menu__choose3');
     const startButton = document.querySelector('.menu__start');
+    const resetButton = document.querySelector('.reset');
+    const countdownValue = document.querySelector('.countdown__value')
     const showMenu = document.querySelector('.menu');
     
     //sounds
@@ -110,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     defaultLevel.addEventListener('click', toggleDefault);
     chooseLevel.addEventListener('click', toggleLevel);
 
-    //funtion change level, clean other selected buttons
+    //funtion change level, clean other selected level buttons
     function chooseLevelFunction () {
         changeSound.play();
         level = this.innerHTML - 1;
@@ -122,14 +124,60 @@ document.addEventListener('DOMContentLoaded', () => {
         this.style.boxShadow = shadowArray[level];
     }
 
+    //function countdown 
+    function showCountdown() {
+        showInvaders();
+        let x = 3;
+        let countdownInterval = setTimeout(function showCountdownInterval() {
+            countdownValue.innerHTML = x;
+            if (x == 0) {
+                clearInterval(countdownInterval);
+                countdownValue.innerHTML = '';
+                startGame();
+            } else {
+                countdownInterval = setTimeout(showCountdownInterval, 1000);
+            }
+            x--; 
+        }, 1000)
+    }
+
+    //function clears whole game each level
+    function restartGame() {
+        destroyedSpaceInvaders = [];
+        clearInterval(spamShot);
+        keys['Space'] = false;
+        document.removeEventListener('keydown', shipShot);
+        cancelAnimationFrame(rAFMoveInvaders);
+        startMoveInvaders = null;
+        direction = 1;
+        score = 0;
+        defaultOption = false;
+        levelOption = true;
+        toggleDefault();
+        hideInvaders();
+    }    
+
     //listeners on each level button
     firstLevel.addEventListener('click', chooseLevelFunction);
     secondLevel.addEventListener('click', chooseLevelFunction);
     thirdLevel.addEventListener('click', chooseLevelFunction);
 
-    //listener on start the game
+    //listener to start the game
     startButton.addEventListener('click', () => {
         startSound.play();
+        showMenu.style.visibility = 'hidden';
+        levelBox.style.visibility = 'hidden';
+        clearInterval(meteorsInterval);
+        showCountdown();
+    });
+
+    //listener to reset the game
+    resetButton.addEventListener('click', () => {
+        endMeteors = false;
+        restartGame();
+        startMeteors();
+        showMenu.style.visibility = 'visible';
+        level = 0;
     });
 
     //---------------------SOUND SHOT/INVADER------------------------
@@ -186,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
             newElement.style.animationDuration = randomTime + "s";
             newElement.style.opacity = 0.6;
             meteorSpace.appendChild(newElement);
-            setTimeout(() => { meteorSpace.removeChild(meteorSpace.childNodes[0]) }, 13000);
+            setTimeout(() => { meteorSpace.removeChild(meteorSpace.childNodes[0]) }, 13000); //remove element from html
             if (endMeteors) {
                 clearInterval(meteorsInterval);
             }
@@ -194,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
         meteorsInterval = setInterval(newMeteor, 400);
     }
 
-    //startMeteors();
+    startMeteors();
     //-------------------------------------------------------------------
 
     //variables of requestAnimationFrame
@@ -210,6 +258,13 @@ document.addEventListener('DOMContentLoaded', () => {
             grid[element].classList.add('invader');
         })
     }
+
+    //function hide invaders on board 
+    function hideInvaders() {
+        grid.forEach(element => {
+            element.classList.remove('invader');
+        })
+    }    
 
     //function finds extreme values of array
     function findExtreme() {
@@ -343,6 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         h2.style.color = 'rgb(29, 255, 29)';
                         cleanGame();
                     } else {
+                        level++;
                         cleanGame();
                     }
                 }
@@ -372,11 +428,9 @@ document.addEventListener('DOMContentLoaded', () => {
         startMoveInvaders = null;
         direction = 1;
         score = 0;
-        //3 seconds to be sure that board is empty
-        setTimeout(() => {
-            level++;
-            startGame();
-        }, 3000);
+        if (level != 2) {
+            showCountdown();
+        }
     }
 
     //move ship horizontally
@@ -385,11 +439,11 @@ document.addEventListener('DOMContentLoaded', () => {
     //function starts the game every level
     function startGame() {
         lengthOfInvadersArray = spaceInvaders[level].length;
-        showInvaders();
+        //showInvaders();
         setTimeout(() => {
             findExtreme();
             requestAnimationFrame(moveInvaders);
-        }, 3000);
+        }, 1000);
 
         // recursive setTimeout to prevent from spamming spacebar
         // add possibility of shooting every 0.6s
@@ -399,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 shipShot();
             }
             spamShot = setTimeout(preventSpamming, 500);
-        }, 3000);
+        }, 1000);
     }
 
     //function starts whole game
