@@ -80,17 +80,90 @@ body {
     0 0 250px rgb(111, 210, 255);
 }
 
-.reset {
+.controls {
     position: absolute;
     top: 0;
     margin: 1rem 0 0 1rem;
+    display: flex;
+    align-items: flex-start;
+}
+
+.controls__reset {
     font-size: 1.3rem;
     padding: 0.5rem;
     border: none;
     box-shadow: inset 0 0 10px rgb(70, 70, 255);
 }
 
-.reset:hover {
+.controls__hint {
+    margin-left: 0.5rem;
+}
+
+.controls__panel {
+    display: block;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    visibility: hidden;
+}
+
+.controls__btn:focus~.controls__panel {
+    visibility: visible;
+}
+
+.controls__btn {
+    font-size: 1.3rem;
+    padding: 0.5rem;
+    border: none;
+    box-shadow: inset 0 0 10px rgb(70, 70, 255); 
+    margin-bottom: 0.5rem;
+}
+
+.controls__panel > .controls__key {
+    text-align: center;
+    font-size: 1.1rem;
+    width: max-content;
+    color: white;
+    padding: 0.2rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+}
+
+.controls__spacebar {
+    padding: 0.5vw 1vw;
+    font-size: 1rem;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.7), rgb(255, 255, 255));
+    box-shadow: 0 2px 0px white,
+                0 2px 5px rgba(241, 210, 210, 0.5);
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    color:black;
+    font-weight: 600;
+}
+
+.controls__arrowKey {
+    width: 8vw;
+    display: flex;
+    justify-content: space-around;
+}
+
+.controls__left {
+    padding: 0.6vw 0.9vw 0;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.7), rgb(255, 255, 255));
+    box-shadow: 0 2px 0px white,
+                0 2px 5px rgba(241, 210, 210, 0.5);
+    border-radius: 6px;
+}
+
+.controls__right {
+    padding: 0.6vw 0.9vw 0.4vw;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.7), rgb(255, 255, 255));
+    box-shadow: 0 2px 0px white,
+                0 2px 5px rgba(241, 210, 210, 0.5);
+    border-radius: 6px;
+}
+
+.reset:hover, .controls__btn:hover {
     box-shadow: inset 0 0 2px white;
     cursor: pointer;
     text-shadow: 0 0 25px rgba(255, 255, 255),

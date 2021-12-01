@@ -1,4 +1,3 @@
-
 <html lang="en">
 
 <head>
@@ -25,7 +24,21 @@
         <h2 class="panel__h2">SCORE <span class="panel__span">0</span></h2>
     </div>
 
-    <button class="reset green">RESET</button>
+    <div class="controls">
+        <button class="controls__reset green">RESET</button>
+        <div class="controls__hint">
+            <button class="controls__btn green">CONTROLS</button>
+            <div class="controls__panel">
+                <div class="controls__key">SHOT</div>
+                <div class="controls__spacebar">SPACEBAR</div>
+                <div class="controls__key">MOVE</div>
+                <div class="controls__arrowKey">
+                    <div class="controls__left">&#9664;</div>
+                    <div class="controls__right">&#9654;</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="countdown">
         <span class='countdown__value'></span>
@@ -679,6 +692,6 @@
         <div class="meteor"></div>
     </div>
 
-</body>
+    </body>
 
 </html>

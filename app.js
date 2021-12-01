@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const thirdLevel = document.querySelector('.menu__choose3');
     const startButton = document.querySelector('.menu__start');
     const resetButton = document.querySelector('.reset');
-    const countdownValue = document.querySelector('.countdown__value')
+    const countdownValue = document.querySelector('.countdown__value');
     const showMenu = document.querySelector('.menu');
     
     //sounds
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let leftExtreme = null;
     let rightExtreme = null;
     let level = 0;
-    let speedOfInvaders = 50;
+    let speedOfInvaders = 600;
     let speedOfShot = 800;
     let lengthOfInvadersArray;
     let spamShot;
@@ -129,20 +129,39 @@ document.addEventListener('DOMContentLoaded', () => {
     //function countdown 
     function showCountdown() {
         //resetButton.removeEventListener('click', resetFunction);
-        showInvaders();
-        let x = 3;
+        let x = 4;
         let countdownInterval = setTimeout(function showCountdownInterval() {
-            countdownValue.innerHTML = x;
             if (x == 0) {
                 clearInterval(countdownInterval);
                 countdownValue.innerHTML = '';
                 startGame();
+            } else if (x == 4){
+                countdownValue.innerHTML = level + 1 + ' LVL';
+                countdownInterval = setTimeout(showCountdownInterval, 1500);
             } else {
-                countdownInterval = setTimeout(showCountdownInterval, 1000);
+                countdownValue.innerHTML = x;
+                countdownInterval = setTimeout(showCountdownInterval, 700);
             }
-            x--; 
-        }, 1000)
+            x--;
+        }, 2000)
     }
+
+    //listeners on each level button
+    firstLevel.addEventListener('click', chooseLevelFunction);
+    secondLevel.addEventListener('click', chooseLevelFunction);
+    thirdLevel.addEventListener('click', chooseLevelFunction);
+
+    //listener to start the game
+    startButton.addEventListener('click', () => {
+        startSound.play();
+        showMenu.style.visibility = 'hidden';
+        levelBox.style.visibility = 'hidden';
+        clearInterval(meteorsInterval);
+        showCountdown();
+    });
+
+    //---------------------RESET BUTTON------------------
+    let controlsBtn = false;
 
     //function clears whole game each level
     function resetGame() {
@@ -174,22 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
         level = 0;
     }
 
-    //listeners on each level button
-    firstLevel.addEventListener('click', chooseLevelFunction);
-    secondLevel.addEventListener('click', chooseLevelFunction);
-    thirdLevel.addEventListener('click', chooseLevelFunction);
-
-    //listener to start the game
-    startButton.addEventListener('click', () => {
-        startSound.play();
-        showMenu.style.visibility = 'hidden';
-        levelBox.style.visibility = 'hidden';
-        clearInterval(meteorsInterval);
-        showCountdown();
-    });
-
     //---------------------SOUND SHOT/INVADER------------------------
-
     function toggleShip(e) {
         changeSound.play();
         if (btnShip.classList.contains('green')){
@@ -250,7 +254,6 @@ document.addEventListener('DOMContentLoaded', () => {
         meteorsInterval = setInterval(newMeteor, 400);
     }
 
-
     //-------------------------------------------------------------------
 
     //variables of requestAnimationFrame
@@ -304,10 +307,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         var elapsedMoveInvaders = timestampMoveInvaders - startMoveInvaders;
 
+        const leftCoordinate = spaceInvaders[level][leftExtreme] % width == 0; //left border
+        const rightCoordinate = spaceInvaders[level][rightExtreme] % width == (width - 1); //right border 
+
         if (elapsedMoveInvaders > speedOfInvaders) {
             startMoveInvaders = timestampMoveInvaders;
-            const leftCoordinate = spaceInvaders[level][leftExtreme] % width == 0; //left border
-            const rightCoordinate = spaceInvaders[level][rightExtreme] % width == (width - 1); //right border 
 
             //change movement direction of invaders
             if ((leftCoordinate && direction == -1) || (rightCoordinate && direction == 1)) {
@@ -380,7 +384,6 @@ document.addEventListener('DOMContentLoaded', () => {
         //function that animate the shot 
         function shot() {
             //move bullet one square
-
             grid[shotActualPosition].classList.remove('shot');
             shotActualPosition -= width;
             grid[shotActualPosition].classList.add('shot');
@@ -406,9 +409,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         span.textContent = '';
                         h2.textContent = 'YOU WON!'
                         h2.style.color = 'rgb(29, 255, 29)';
-                        cleanGame();
+                        endGame();
                     } else {
-                        level++;
                         cleanGame();
                     }
                 }
@@ -438,9 +440,20 @@ document.addEventListener('DOMContentLoaded', () => {
         startMoveInvaders = null;
         direction = 1;
         score = 0;
-        if (level != 3) {
-            showCountdown();
-        }
+        hideInvaders();
+        showCountdown();
+        level++;
+    }
+
+    function endGame() {
+        destroyedSpaceInvaders = [];
+        clearInterval(spamShot);
+        keys['Space'] = false;
+        document.removeEventListener('keydown', shipShot);
+        cancelAnimationFrame(rAFMoveInvaders);
+        startMoveInvaders = null;
+        direction = 1;
+        score = 0;
     }
 
     //move ship horizontally
@@ -449,10 +462,10 @@ document.addEventListener('DOMContentLoaded', () => {
     //function starts the game every level
     function startGame() {
         lengthOfInvadersArray = spaceInvaders[level].length;
-        //showInvaders();
+        showInvaders();
         setTimeout(() => {
             findExtreme();
-            requestAnimationFrame(moveInvaders);
+            rAFMoveInvaders = requestAnimationFrame(moveInvaders);
             resetButton.addEventListener('click', resetFunction); //enable reset button
         }, 1000);
 
@@ -463,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (keys['Space']) {
                 shipShot();
             }
-            spamShot = setTimeout(preventSpamming, 700);
+            spamShot = setTimeout(preventSpamming, 500);
         }, 1000);
     }
 
