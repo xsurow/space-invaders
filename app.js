@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const secondLevel = document.querySelector('.menu__choose2');
     const thirdLevel = document.querySelector('.menu__choose3');
     const startButton = document.querySelector('.menu__start');
-    const resetButton = document.querySelector('.reset');
+    const resetButton = document.querySelector('.controls__reset');
     const countdownValue = document.querySelector('.countdown__value');
     const showMenu = document.querySelector('.menu');
     
@@ -133,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let countdownInterval = setTimeout(function showCountdownInterval() {
             if (x == 0) {
                 clearInterval(countdownInterval);
+                level++;
                 countdownValue.innerHTML = '';
                 startGame();
             } else if (x == 4){
@@ -140,10 +141,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 countdownInterval = setTimeout(showCountdownInterval, 1500);
             } else {
                 countdownValue.innerHTML = x;
-                countdownInterval = setTimeout(showCountdownInterval, 700);
+                countdownInterval = setTimeout(showCountdownInterval, 1000);
             }
             x--;
-        }, 2000)
+        }, 1000)
     }
 
     //listeners on each level button
@@ -161,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //---------------------RESET BUTTON------------------
-    let controlsBtn = false;
 
     //function clears whole game each level
     function resetGame() {
@@ -442,7 +442,6 @@ document.addEventListener('DOMContentLoaded', () => {
         score = 0;
         hideInvaders();
         showCountdown();
-        level++;
     }
 
     function endGame() {
