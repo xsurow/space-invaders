@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let rightExtreme = null;
     let level = 0;
     let speedOfInvaders = 600;
-    let speedOfShot = 800;
     let lengthOfInvadersArray;
     let spamShot;
     let keys = {};
@@ -70,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
     //---------------------------MAIN MENU-------------------------------
     let defaultOption = true;
     let levelOption = false;
-    let choosenLevel = 1;
     let colorArray = ['inset 0 0 5px rgb(0, 255, 0)', 'inset 0 0 5px rgb(217, 255, 0)', 'inset 0 0 5px rgb(255, 0, 0)'];
     let shadowArray = ['inset 0 0 5px rgb(0, 255, 0), inset 0 0 20px rgb(0, 255, 0)',
                       'inset 0 0 5px rgb(217, 255, 0), inset 0 0 20px rgb(217, 255, 0)',
@@ -114,13 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
     defaultLevel.addEventListener('click', toggleDefault);
     chooseLevel.addEventListener('click', toggleLevel);
 
-    //function change level, clean other selected level buttons
+    //function changes level, clean other selected level buttons
     function chooseLevelFunction () {
         changeSound.play();
         level = this.innerHTML - 1;
         for (let i = 0; i < 3; i++) {
             if (level != i) {
-                levels[i].style.boxShadow = colorArray[i]
+                levels[i].style.boxShadow = colorArray[i];
             }
         }
         this.style.boxShadow = shadowArray[level];
@@ -132,8 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let x = 4;
         let countdownInterval = setTimeout(function showCountdownInterval() {
             if (x == 0) {
+                spaceInvaders = spaceInvadersOrginal.slice(0);
                 clearInterval(countdownInterval);
-                level++;
                 countdownValue.innerHTML = '';
                 startGame();
             } else if (x == 4){
@@ -158,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showMenu.style.visibility = 'hidden';
         levelBox.style.visibility = 'hidden';
         clearInterval(meteorsInterval);
+        spaceInvaders = spaceInvadersOrginal.slice(0);
         showCountdown();
     });
 
@@ -166,11 +165,13 @@ document.addEventListener('DOMContentLoaded', () => {
     //function clears whole game each level
     function resetGame() {
         destroyedSpaceInvaders = [];
+        spaceInvaders = [];
         clearInterval(spamShot);
         keys['Space'] = false;
         document.removeEventListener('keydown', shipShot);
         cancelAnimationFrame(rAFMoveInvaders);
         h2.style.color = 'white';
+        h2.textContent = 'SCORE';
         span.style.color = 'white';
         startMoveInvaders = null;
         direction = 1;
@@ -178,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
         span.textContent = score;
         defaultOption = false;
         levelOption = true;
-        spaceInvaders = spaceInvadersOrginal.slice(0);
         toggleDefault();
         hideInvaders();
     }
@@ -199,11 +199,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btnShip.classList.contains('green')){
             this.classList.remove('green');
             this.classList.add('red');
-            shipSound = false;
+            shipSoundPlays = false;
         } else {
             this.classList.remove('red');
             this.classList.add('green');
-            shipSound = true;
+            shipSoundPlays = true;
         }
         e.target.blur();
     }
@@ -213,11 +213,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btnInvader.classList.contains('green')){
             this.classList.remove('green');
             this.classList.add('red');
-            invaderSound = false;
+            invaderSoundPlays = false;
         } else {
             this.classList.remove('red');
             this.classList.add('green');
-            invaderSound = true;
+            invaderSoundPlays = true;
         }
         e.target.blur();
     }
@@ -399,6 +399,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 findExtreme(); //find left and right extreme position of invaders
                 score++;
                 span.textContent = score + "|" + lengthOfInvadersArray;
+                if (invaderSoundPlays) {
+                    invaderSound.play();
+                }
                 destroyedSpaceInvaders.push(shotActualPosition); //update array of killed invaders
                 clearInterval(shotInterval);
 
@@ -418,14 +421,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // invoke shot function by clicking spacebar
         if (keys['Space']) {
-            // if(shipSound) {
-            //     shotSound.play();
-            // }
+            if(shipSoundPlays) {
+                shipSound.play();
+            }
             var shotInterval = setInterval(shot, 50); //animation of shot
         } else if (event.key == ' ') {
-            // if(shipSound) {
-            //     shotSound.play();
-            // }
+            if(shipSoundPlays) {
+                shipSound.play();
+            }
             var shotInterval = setInterval(shot, 50); //animation of shot
         }
     }
@@ -433,13 +436,16 @@ document.addEventListener('DOMContentLoaded', () => {
     //function clears whole game each level
     function cleanGame() {
         destroyedSpaceInvaders = [];
+        spaceInvaders = [];
         clearInterval(spamShot);
         keys['Space'] = false;
         document.removeEventListener('keydown', shipShot);
+        spaceInvaders = spaceInvadersOrginal.slice(0);
         cancelAnimationFrame(rAFMoveInvaders);
         startMoveInvaders = null;
         direction = 1;
         score = 0;
+        level++;
         hideInvaders();
         showCountdown();
     }
@@ -460,6 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //function starts the game every level
     function startGame() {
+        spaceInvaders = spaceInvadersOrginal.slice(0);
         lengthOfInvadersArray = spaceInvaders[level].length;
         showInvaders();
         setTimeout(() => {
