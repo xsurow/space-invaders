@@ -171,16 +171,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.removeEventListener('keydown', shipShot);
         cancelAnimationFrame(rAFMoveInvaders);
         h2.style.color = 'white';
-        h2.textContent = 'SCORE';
+        score = 0;
         span.style.color = 'white';
+        span.innerHTML = score;
         startMoveInvaders = null;
         direction = 1;
-        score = 0;
-        span.textContent = score;
+        hideInvaders();
         defaultOption = false;
         levelOption = true;
         toggleDefault();
-        hideInvaders();
     }
     
     //function of reset button
@@ -440,7 +439,6 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(spamShot);
         keys['Space'] = false;
         document.removeEventListener('keydown', shipShot);
-        spaceInvaders = spaceInvadersOrginal.slice(0);
         cancelAnimationFrame(rAFMoveInvaders);
         startMoveInvaders = null;
         direction = 1;
@@ -476,7 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
 
         // recursive setTimeout to prevent from spamming spacebar
-        // add possibility of shooting every 0.6s
+        // add possibility of shooting every 0.5s
         spamShot = setTimeout(function preventSpamming() {
             document.addEventListener('keydown', shipShot);
             if (keys['Space']) {
