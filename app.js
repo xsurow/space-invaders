@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //board elements
     const grid = document.querySelectorAll('.grid__square');
-    const span = document.querySelector('.panel__span');
+    let span = document.querySelector('.panel__span');
     const h2 = document.querySelector('.panel__h2');
     const meteorSpace = document.querySelector('.space');
     const btnShip = document.querySelector('.btns__ship');
@@ -171,6 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.removeEventListener('keydown', shipShot);
         cancelAnimationFrame(rAFMoveInvaders);
         h2.style.color = 'white';
+        h2.innerHTML = 'SCORE <span class="panel__span">0</span>';
+        span = document.querySelector('.panel__span');
         score = 0;
         span.style.color = 'white';
         span.innerHTML = score;
@@ -480,7 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (keys['Space']) {
                 shipShot();
             }
-            spamShot = setTimeout(preventSpamming, 500);
+            spamShot = setTimeout(preventSpamming, 50);
         }, 1000);
     }
 
