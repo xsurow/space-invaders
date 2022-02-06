@@ -5,7 +5,7 @@ Space Invaders is a fixed shooter in which the player moves a spaceship horizont
 The game has three levels, each subsequent one increases the difficulty of the game.
 
 ## Technologies 
-* HTML5
+* HTML
 * CSS
 * JavaScript
 
