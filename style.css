@@ -558,3 +558,23 @@ body {
         padding: 2vw;
     }
 }
+
+#available {
+    display: none;
+}
+
+@media screen and (max-width: 600px) {
+
+    .btns, .panel, .controls, .countdown, .menu, .grid{
+        display: none;
+    }
+
+    #available {
+        display: flex;
+        justify-content: center;
+        margin-top: 50vh;
+        transform: translateY(-50%);
+        color: white;
+        font-size: 3vw;
+    }
+}
