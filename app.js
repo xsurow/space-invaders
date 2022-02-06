@@ -482,7 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (keys['Space']) {
                 shipShot();
             }
-            spamShot = setTimeout(preventSpamming, 50);
+            spamShot = setTimeout(preventSpamming, 500);
         }, 1000);
     }
 
